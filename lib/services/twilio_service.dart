@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter_whatsapp_notification/config/env.dart';
+
 
 class TwilioResponse {
   final bool success;
@@ -18,9 +20,9 @@ class TwilioResponse {
 
 class TwilioService {
   // Replace these with your actual Twilio credentials
-  static const String accountSid = 'ACcd0e2ddfd3e0ae95d0b791ec88dfde3d'; // Replace with your Twilio Account SID
-  static const String authToken = '8d3b59c2077a08c55788f814e330ca3a'; // Replace with your Twilio Auth Token
-  static const String twilioWhatsAppNumber = '+14155238886'; // Replace with your Twilio WhatsApp number
+  static const String accountSid = Env.twilioAccountSid; // Replace with your Twilio Account SID
+  static const String authToken = Env.twilioAuthToken; // Replace with your Twilio Auth Token
+  static const String twilioWhatsAppNumber = Env.twilioWhatsAppNumber; // Replace with your Twilio WhatsApp number
 
   // Generate a PDF file
 Future<File> generatePdf(String message) async {
