@@ -1,0 +1,1 @@
+ C:\\Users\\moonl\\Desktop\\twilio-whatsapp\\.dart_tool\\flutter_build\\d065919311fb3fef86144834afb1c687\\native_assets.yaml: 
