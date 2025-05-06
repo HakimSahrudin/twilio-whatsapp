@@ -20,9 +20,9 @@ class TwilioResponse {
 
 class TwilioService {
   // Replace these with your actual Twilio credentials
-  static const String accountSid = Env.twilioAccountSid; // Replace with your Twilio Account SID
-  static const String authToken = Env.twilioAuthToken; // Replace with your Twilio Auth Token
-  static const String twilioWhatsAppNumber = Env.twilioWhatsAppNumber; // Replace with your Twilio WhatsApp number
+  static const String accountSid = Env.twilioAccountSid; 
+  static const String authToken = Env.twilioAuthToken; 
+  static const String twilioWhatsAppNumber = Env.twilioWhatsAppNumber; 
 
   // Generate a PDF file
 Future<File> generatePdf(String message) async {
