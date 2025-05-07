@@ -28,3 +28,6 @@ next-env.d.ts
 
 # Ignore the environment configuration file
 lib/config/env.dart
+
+# Ignore service account credentials
+assets/service_account.json
