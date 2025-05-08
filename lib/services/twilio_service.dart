@@ -74,7 +74,7 @@ Future<File> generateReceiptPdf(ReceiptData receiptData) async {
 
   // Save the PDF to a temporary directory
   final outputDir = await getTemporaryDirectory();
-  final file = File('${outputDir.path}/receipt.pdf');
+  final file = File('s${outputDir.path}/receipt.pdf');
   await file.writeAsBytes(await pdf.save());
   return file;
 }
