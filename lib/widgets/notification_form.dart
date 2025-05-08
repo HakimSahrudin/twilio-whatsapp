@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp_notification/services/twilio_service.dart';
 import 'package:flutter_whatsapp_notification/services/google_drive_service.dart';
+import 'package:flutter_whatsapp_notification/models/receipt_data.dart';
 
 class NotificationForm extends StatefulWidget {
   final TwilioService twilioService;
@@ -36,10 +37,6 @@ class _NotificationFormState extends State<NotificationForm> {
   }
 
   Future<void> _sendNotification() async {
-  if (!_formKey.currentState!.validate()) {
-    return;
-  }
-
   setState(() {
     _isLoading = true;
     _errorMessage = null;
@@ -47,15 +44,30 @@ class _NotificationFormState extends State<NotificationForm> {
   });
 
   try {
-    // Step 1: Generate the PDF
-    final pdfFile = await widget.twilioService.generatePdf(_messageController.text);
-    // Step 2: Upload the PDF to Google Drive
+    // Step 1: Use predefined dummy data for the receipt
+    final receiptData = ReceiptData(
+      receiptNumber: 'DUMMY12345',
+      date: '2025-05-08',
+      customerName: 'Jane Doe',
+      items: [
+        {'name': 'Product A', 'quantity': 2, 'price': 15.0},
+        {'name': 'Product B', 'quantity': 1, 'price': 25.0},
+        {'name': 'Product C', 'quantity': 3, 'price': 10.0},
+      ],
+      totalAmount: 95.0,
+      paymentMethod: 'Cash',
+    );
+
+    // Step 2: Generate the PDF
+    final pdfFile = await widget.twilioService.generateReceiptPdf(receiptData);
+
+    // Step 3: Upload the PDF to Google Drive
     final String hostedPdfUrl = await widget.googleDriveservice.uploadPdfToGoogleDrive(pdfFile);
 
-    // Step 3: Send the WhatsApp message with the hosted PDF link
+    // Step 4: Send the WhatsApp message with the hosted PDF link
     final result = await widget.twilioService.sendWhatsAppMessage(
-      to: _phoneController.text,
-      message: 'Here is your PDF file containing the message!',
+      to: '+60172586093', // Dummy phone number
+      message: 'Here is your receipt PDF!',
       pdfUrl: hostedPdfUrl,
     );
 

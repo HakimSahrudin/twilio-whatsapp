@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter_whatsapp_notification/models/receipt_data.dart';
 import 'package:http/http.dart' as http;
 import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_whatsapp_notification/config/env.dart';
+
+
 
 
 class TwilioResponse {
@@ -25,25 +28,53 @@ class TwilioService {
   static const String twilioWhatsAppNumber = Env.twilioWhatsAppNumber; 
 
   // Generate a PDF file
-Future<File> generatePdf(String message) async {
+Future<File> generateReceiptPdf(ReceiptData receiptData) async {
   final pdf = pw.Document();
 
-  // Add a page with the message
   pdf.addPage(
     pw.Page(
-      build: (pw.Context context) => pw.Center(
-        child: pw.Text(
-          message,
-          // ignore: prefer_const_constructors
-          style: pw.TextStyle(fontSize: 24),
+      build: (pw.Context context) => pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Text(
+            'Receipt',
+            style: pw.TextStyle(fontSize: 32, fontWeight: pw.FontWeight.bold),
+          ),
+          pw.SizedBox(height: 16),
+          pw.Text('Receipt Number: ${receiptData.receiptNumber}'),
+          pw.Text('Date: ${receiptData.date}'),
+          pw.Text('Customer Name: ${receiptData.customerName}'),
+          pw.SizedBox(height: 16),
+          pw.Text(
+            'Items:',
+            style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold),
+          ),
+          pw.Table.fromTextArray(
+            headers: ['Item', 'Quantity', 'Price', 'Total'],
+            data: receiptData.items.map((item) {
+              final total = item['quantity'] * item['price'];
+              return [
+                item['name'],
+                item['quantity'].toString(),
+                '\$${item['price'].toStringAsFixed(2)}',
+                '\$${total.toStringAsFixed(2)}',
+              ];
+            }).toList(),
+          ),
+          pw.SizedBox(height: 16),
+          pw.Text(
+            'Total Amount: \$${receiptData.totalAmount.toStringAsFixed(2)}',
+            style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold),
         ),
+          pw.Text('Payment Method: ${receiptData.paymentMethod}'),
+        ],
       ),
     ),
   );
 
   // Save the PDF to a temporary directory
   final outputDir = await getTemporaryDirectory();
-  final file = File('${outputDir.path}/message.pdf');
+  final file = File('${outputDir.path}/receipt.pdf');
   await file.writeAsBytes(await pdf.save());
   return file;
 }
