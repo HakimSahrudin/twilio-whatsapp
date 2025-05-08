@@ -65,7 +65,7 @@ Future<File> generateReceiptPdf(ReceiptData receiptData) async {
           pw.Text(
             'Total Amount: \$${receiptData.totalAmount.toStringAsFixed(2)}',
             style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold),
-        ),
+          ),
           pw.Text('Payment Method: ${receiptData.paymentMethod}'),
         ],
       ),
